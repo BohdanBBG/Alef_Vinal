@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Alef_Vinal.Contexts;
 using Alef_Vinal.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,13 +29,16 @@ namespace Alef_Vinal
             var config = Configuration.Get<ApplicationSettings>();
             services.Configure<ApplicationSettings>(Configuration);
 
-            services.AddTransient<IDataRepositoty, DataRepository>();
+            services.AddDbContext<CodeEntityContext>(options =>
+            options.UseSqlServer(config.ConnectionStrings.MainDb));
+
+            services.AddTransient<IDataRepository, DataRepository>();
 
             services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alef_Vinal", Version = "V1" });
+                c.SwaggerDoc("V1", new OpenApiInfo { Title = "Alef_Vinal", Version = "V1" });
             });
         }
 
@@ -60,7 +65,7 @@ namespace Alef_Vinal
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarHealth.Api V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alef_Vinal V1");
             });
 
             app.UseEndpoints(endpoints =>

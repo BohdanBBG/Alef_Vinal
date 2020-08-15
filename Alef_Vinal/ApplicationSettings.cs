@@ -8,11 +8,11 @@ namespace Alef_Vinal
 
     public class ApplicationSettings
     {
-        public ConnectionStrings EFCoreDb { get; set; }
+        public ConnectionStringsSettings ConnectionStrings { get; set; }
     }
 
 
-    public class ConnectionStrings
+    public class ConnectionStringsSettings
     {
         public string MainDb { get; set; }
     }
