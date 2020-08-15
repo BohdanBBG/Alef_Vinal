@@ -14,7 +14,7 @@ namespace Alef_Vinal.Repositories
 
         public Task<IList<CodeEntity>> GetAll();
 
-        public Task Add(CodeEntity value);
+        public Task Add(NewCodeEntity value);
 
         public Task<bool> Update(CodeEntity value);
 

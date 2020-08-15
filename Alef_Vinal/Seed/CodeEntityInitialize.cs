@@ -36,7 +36,7 @@ namespace Alef_Vinal.Seed
                 }
 
 
-                await db.Add(new CodeEntity
+                await db.Add(new NewCodeEntity
                 {
                     Name = faker.Lorem.Word(),
                     Value = threeDigitNumberString

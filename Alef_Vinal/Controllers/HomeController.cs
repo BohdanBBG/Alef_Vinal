@@ -21,6 +21,11 @@ namespace Alef_Vinal.Controllers
             _dataRepository = dataRepository;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet("GetOne")]
         public async Task<IActionResult> GetOne([FromQuery] string id)
         {
@@ -48,7 +53,7 @@ namespace Alef_Vinal.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CodeEntity codeEntity)
+        public async Task<IActionResult> Add([FromBody] NewCodeEntity codeEntity)
         {
             await _dataRepository.Add(codeEntity);
 

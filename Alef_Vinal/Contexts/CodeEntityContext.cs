@@ -16,5 +16,10 @@ namespace Alef_Vinal.Contexts
         }
 
         public DbSet<CodeEntity> CodeEntities { get; set; }
+
+        protected override void OnModelCreating (ModelBuilder modelBuilder)
+        {
+
+        }
     }
 }

@@ -30,10 +30,9 @@ namespace Alef_Vinal
 
             services.AddTransient<IDataRepository, DataRepository>();
 
-            services.AddControllers();
+            services.AddMvc();
 
-            services.AddLogging(configure => configure.AddConsole())
-              .AddTransient<Program>();
+         
 
             services.AddSwaggerGen();
         }
@@ -51,9 +50,8 @@ namespace Alef_Vinal
             }
 
             app.UseHttpsRedirection();
-
-            app.UseStaticFiles();
             app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -65,7 +63,9 @@ namespace Alef_Vinal
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
