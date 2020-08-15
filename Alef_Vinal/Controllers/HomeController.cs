@@ -6,32 +6,66 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Alef_Vinal.Models;
+using Alef_Vinal.Repositories;
 
 namespace Alef_Vinal.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IDataRepository _dataRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IDataRepository dataRepository)
         {
             _logger = logger;
+            _dataRepository = dataRepository;
         }
 
-        public IActionResult Index()
+        [HttpGet("GetOne")]
+        public async Task<IActionResult> GetOne([FromQuery] string id)
         {
-            return View();
+            var codeEntity = await _dataRepository.GetOne(id);
+
+            if (codeEntity != null)
+            {
+                return Ok(codeEntity);
+            }
+
+            return NotFound();
         }
 
-        public IActionResult Privacy()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            return View();
+            var codeEntities = await _dataRepository.GetAll();
+
+            if (codeEntities != null)
+            {
+                return Ok(codeEntities);
+            }
+
+            return NotFound();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost("Add")]
+        public async Task<IActionResult> Add([FromBody] CodeEntity codeEntity)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await _dataRepository.Add(codeEntity);
+
+            return Ok();
         }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] CodeEntity codeEntity)
+        {
+
+            if (await _dataRepository.Update(codeEntity))
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
     }
 }

@@ -23,15 +23,16 @@ namespace Alef_Vinal.Repositories
             return !_db.CodeEntities.Any();
         }
 
-        public async Task<CodeEntity> GetMany()
+        public async Task<CodeEntity> GetOne( string id)
         {
-            throw new NotImplementedException();
+            return await _db.CodeEntities.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<CodeEntity> GetOne()
+        public async Task<IList<CodeEntity>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _db.CodeEntities.ToListAsync();
         }
+        
 
         public async Task Add(CodeEntity value)
         {
@@ -42,12 +43,36 @@ namespace Alef_Vinal.Repositories
 
         public async Task<bool> Delete(string entityId)
         {
-            throw new NotImplementedException();
+            var toDelete = await _db.CodeEntities.FirstOrDefaultAsync(x => x.Id == entityId);
+
+            if (toDelete != null)
+            {
+                _db.CodeEntities.Remove(toDelete);
+
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
         }
 
-        public async Task Update(CodeEntity value)
+        public async Task<bool> Update(CodeEntity newCodeEntity)
         {
-            throw new NotImplementedException();
+            var toUpdate = await _db.CodeEntities.FirstOrDefaultAsync(x => x.Id == newCodeEntity.Id);
+
+            if (toUpdate != null)
+            {
+
+                toUpdate.Name = newCodeEntity.Name;
+                toUpdate.Value = newCodeEntity.Value;
+
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
         }
       
     }

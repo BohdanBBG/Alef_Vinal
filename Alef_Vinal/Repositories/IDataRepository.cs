@@ -10,13 +10,13 @@ namespace Alef_Vinal.Repositories
     {
         public bool IsEmptyDb();
 
-        public Task<CodeEntity> GetOne();
+        public Task<CodeEntity> GetOne(string id);
 
-        public Task<CodeEntity> GetMany();
+        public Task<IList<CodeEntity>> GetAll();
 
         public Task Add(CodeEntity value);
 
-        public Task Update(CodeEntity value);
+        public Task<bool> Update(CodeEntity value);
 
         public Task<bool> Delete(string entityId);
 
