@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Alef_Vinal.Models;
 using Alef_Vinal.Repositories;
+using AutoMapper;
 
 namespace Alef_Vinal.Controllers
 {
@@ -53,9 +54,14 @@ namespace Alef_Vinal.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] NewCodeEntity codeEntity)
+        public async Task<IActionResult> Add([FromBody] NewCodeEntityDto codeEntity)
         {
-            await _dataRepository.Add(codeEntity);
+
+            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<CodeEntity, NewCodeEntityDto>()));
+
+            await _dataRepository.Add(mapper.Map<CodeEntity>(codeEntity));
+
+            //  await _dataRepository.Add(codeEntity);
 
             return Ok();
         }

@@ -1,4 +1,5 @@
-﻿using Alef_Vinal.Models;
+﻿using Alef_Vinal.Contexts.ModelConfigurations;
+using Alef_Vinal.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Alef_Vinal.Contexts
 
         protected override void OnModelCreating (ModelBuilder modelBuilder)
         {
-
+            modelBuilder.ApplyConfiguration(new CodeEntityConfiguration());
         }
     }
 }

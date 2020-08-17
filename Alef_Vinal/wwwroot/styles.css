@@ -1,6 +1,4 @@
 
-
-
 .app-container
 {
     width: auto;
@@ -75,11 +73,16 @@ table
     text-overflow: ellipsis;
 }
 
+.data-value-name-container.hidden
+{
+    display: none;
+}
+
 .data-value-name-container:hover {
     opacity: 0.7;
 }
 
-.data-value-name-container:nth-child(n + 8) {
+.data-value-name-container:nth-child(n + 9) {
     margin-left: 0.3em;
 }
 

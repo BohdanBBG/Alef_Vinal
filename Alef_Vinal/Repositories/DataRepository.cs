@@ -34,13 +34,9 @@ namespace Alef_Vinal.Repositories
         }
         
 
-        public async Task Add(NewCodeEntity newCodeEntity)
+        public async Task Add(CodeEntity newCodeEntity)
         {
-            await _db.CodeEntities.AddAsync(new CodeEntity 
-            {
-                Name = newCodeEntity.Name,
-                Value = newCodeEntity.Value
-            });
+            await _db.CodeEntities.AddAsync(newCodeEntity);
 
             await _db.SaveChangesAsync();
         }
