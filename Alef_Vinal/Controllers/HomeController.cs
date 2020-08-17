@@ -58,14 +58,14 @@ namespace Alef_Vinal.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromBody] NewCodeEntityDto codeEntity)
         {
-            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<CodeEntity, NewCodeEntityDto>()));
+            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<NewCodeEntityDto,CodeEntity>()));
 
             await _dataRepository.Add(mapper.Map<CodeEntity>(codeEntity));
 
             return Ok();
         }
 
-        [HttpPut("Update")]
+        [HttpPut("Update")] // TODO change to PATCH
         public async Task<IActionResult> Update([FromBody] CodeEntity codeEntity)
         {
             if (await _dataRepository.Update(codeEntity))

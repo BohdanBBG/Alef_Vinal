@@ -35,13 +35,14 @@ namespace Alef_Vinal
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CodeEntityValidator>()); // This will automatically find any public, non-abstract types that
                                                                                                                 // inherit from AbstractValidator and register them with the container 
-                                                                                                                //(open generics are not supported).
+                                                                                                     //(open generics are not supported).
 
             services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

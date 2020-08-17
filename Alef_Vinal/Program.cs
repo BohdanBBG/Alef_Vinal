@@ -25,11 +25,11 @@ namespace Alef_Vinal
 
                 try
                 {
-                    var carRepository = services.GetRequiredService<IDataRepository>();
+                    var dataRepository = services.GetRequiredService<IDataRepository>();
 
-                    if (carRepository.IsEmptyDb())
+                    if (dataRepository.IsEmptyDb())
                     {
-                        await CodeEntityInitialize.InitializeAsync(carRepository);
+                        await CodeEntityInitialize.InitializeAsync(dataRepository);
                     }
                 }
 
@@ -46,9 +46,8 @@ namespace Alef_Vinal
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var builder = WebHost.CreateDefaultBuilder(args)
-                .UseConfiguration(GetConfiguration());
-
-            builder.UseStartup<Startup>();
+                .UseConfiguration(GetConfiguration())
+                .UseStartup<Startup>();
 
             return builder;
         }

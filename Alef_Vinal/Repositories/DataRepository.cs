@@ -30,7 +30,7 @@ namespace Alef_Vinal.Repositories
 
         public async Task<IList<CodeEntity>> GetAll()
         {
-            return await _db.CodeEntities.ToListAsync();
+           return await _db.CodeEntities.ToListAsync();
         }
         
 
@@ -63,8 +63,20 @@ namespace Alef_Vinal.Repositories
 
             if (toUpdate != null)
             {
-
                 toUpdate.Name = newCodeEntity.Name;
+
+
+                if (newCodeEntity.Value.Length == 1)
+                {
+                    newCodeEntity.Value = "00" + newCodeEntity.Value;
+                }
+
+                if (newCodeEntity.Value.Length == 2)
+                {
+                    newCodeEntity.Value = "0" + newCodeEntity.Value.ToString();
+                }
+
+
                 toUpdate.Value = newCodeEntity.Value;
 
                 await _db.SaveChangesAsync();

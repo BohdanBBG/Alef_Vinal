@@ -1,8 +1,11 @@
 "use strict";
 
+var pageData = {};
 
 var eventListenerState = { // to make sure the EventListener was added once
-    dataItem: { state: false }
+    dataItem: { state: false },
+    itemListPutButton: { state: false },
+    itemListAddButton: { state: false }
 }
 
 var dataListContainer = document.querySelector('.data-list-container');
@@ -10,8 +13,16 @@ var dataListEl = document.querySelector('.js-data-value-name-template');
 
 function initDataList() {
     getPageData(function (items) {
+
+        pageData = items;
+
+        // remove all childs
+        while (dataListContainer.firstChild) {
+            dataListContainer.removeChild(dataListContainer.firstChild);
+        }
+
         items.forEach(function (item, i) {
-            addDataItemsBlock(item, item.CarItemId);
+            addDataItemsBlock(item);
         });
     });
 }
@@ -24,6 +35,7 @@ function getPageData(callBack) {
 
 
 function addDataItemsBlock(item) {
+
     var clone = dataListEl.cloneNode(true);
     var dataValueEl = clone.querySelector('.data-value-span');
     var dataName = clone.querySelector('.data-name-span');
@@ -38,17 +50,138 @@ function addDataItemsBlock(item) {
 
 initDataList();
 
-addBubleEventListener(dataListEl, dataListContainer,  'click', eventListenerState.dataItem, function (e) {
 
-    console.log("asdasdasdas");
-    var editDataDormEl = document.forms.EditData;
 
-    editDataDormEl.elements.id = "1";
-    editDataDormEl.elements.value = "1";
-    editDataDormEl.elements.name = "1";
+addBubleEventListener(dataListContainer, ".data-value-name-container", 'click', eventListenerState.dataItem, function (e, actualEl, desiredEl) {
+    e.stopPropagation();
+
+    console.log("Item list event. Actual Element: ", actualEl);
+    console.log("Item list event. Desired Element: ", desiredEl);
+
+    let codeEntityId = desiredEl.getAttribute('item-id');
+
+    let selectedItemList = pageData.find(x => x.id === codeEntityId);
+
+    let editDataDormEl = document.forms.EditData;
+
+    editDataDormEl.elements.id.value = codeEntityId;
+    editDataDormEl.elements.value.value = selectedItemList.value;
+    editDataDormEl.elements.name.value = selectedItemList.name;
 
 
 });
+
+addBubleEventListener(".js-put-button-container", '.js-put-button', 'click', eventListenerState.itemListPutButton, function (e, actualEl, desiredEl) {
+    e.stopPropagation();
+
+    var formDataSend = {};
+
+
+    if (makeRequestBody(formDataSend, document.forms.EditData)) {
+
+        httpRequest("/Update", formDataSend, "PUT", function (statusCode) {
+
+            if (statusCode == 200) {
+                initDataList();
+            }
+        });
+
+    }
+
+});// event listener on PUT button
+
+addBubleEventListener(".js-add-button-container", '.js-add-button', 'click', eventListenerState.itemListAddButton, function (e, actualEl, desiredEl) {
+    e.stopPropagation();
+
+    var formDataSend = {};
+
+    if (makeRequestBody(formDataSend, document.forms.AddNewData)) {
+
+        httpRequest("/Add", formDataSend, "POST", function (statusCode) {
+
+            if (statusCode == 200) {
+                initDataList();
+            }
+        });
+
+    }
+
+});// event listener on ADD button
+
+function makeRequestBody(formDataSend, source) {
+
+    var isSomeoneEmpty = false;
+
+    for (var i = 0; i < source.elements.length - 1; i++) {
+
+        formDataSend[source.elements[i].name] = source.elements[i].value ? source.elements[i].value :
+            source.elements[i].classList.add('input-field-empty-js');
+
+        if (formDataSend[source.elements[i].name] === undefined) {
+            isSomeoneEmpty = true;
+        }
+
+        source.elements[i].onfocus = function (e) {
+            if (e.target.classList.contains('input-field-empty-js')) {
+                e.target.classList.remove('input-field-empty-js');
+            }
+        }
+    }
+
+    console.log('------', formDataSend);
+
+    return !isSomeoneEmpty;
+}
+
+// function makeRequestBody(formDataSend, source, isFromEditForm = true) {
+
+//     console.log(source.elements);
+//     if (isFromEditForm) {
+//         formDataSend.id = source.elements.id.value ? source.elements.id.value :
+//             source.elements.id.classList.add('input-field-empty-js');
+//     }
+
+//     formDataSend.value = (source.elements.value.value &&
+//         (/^\d{0,3}$/.test(source.elements.value.value))) ?
+//         source.elements.value.value :
+//         source.elements.value.classList.add('input-field-empty-js');
+
+//     formDataSend.name = source.elements.name.value ? source.elements.name.value :
+//         source.elements.name.classList.add('input-field-empty-js');
+
+//     if (isFromEditForm) {
+//         source.elements.id.onfocus = function () {
+//             if (source.elements.id.classList.contains('input-field-empty-js')) {
+//                 source.elements.id.classList.remove('input-field-empty-js');
+//             }
+//         }
+//     }
+
+//     source.elements.value.onfocus = function () {
+//         if (source.elements.value.classList.contains('input-field-empty-js')) {
+//             source.elements.value.classList.remove('input-field-empty-js');
+//         }
+//     }
+
+//     source.elements.name.onfocus = function () {
+//         if (source.elements.name.classList.contains('input-field-empty-js')) {
+//             source.elements.name.classList.remove('input-field-empty-js');
+//         }
+//     }
+
+//     if ((isFromEditForm ? formDataSend.id : true) &&
+//         formDataSend.value &&
+//         formDataSend.name) {
+//         return true;
+//     }
+
+//     // if ((formDataSend.id && isFromEditForm) &&
+//     //     formDataSend.value &&
+//     //     formDataSend.name) {
+//     //     return true;
+//     // }
+// }// makes request body and checks empty field(s)
+
 
 function addBubleEventListener(sourceElSelector, targetElSelector, eventName, checkedHandler, eventHandler) { // for add EventListener to elements
 
