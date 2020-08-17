@@ -10,7 +10,7 @@ namespace Alef_Vinal.Models
     public class NewCodeEntityDto
     {
         [Required]
-        [StringLength(20, MinimumLength = 1)]
+        [StringLength(50, MinimumLength = 1)]
         public string Name { get; set; }
 
         [Required]

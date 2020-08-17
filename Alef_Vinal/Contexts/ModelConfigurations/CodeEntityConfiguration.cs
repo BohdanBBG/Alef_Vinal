@@ -17,7 +17,7 @@ namespace Alef_Vinal.Contexts.ModelConfigurations
 
             builder.Property(p => p.Name)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(50);
 
             builder.Property(p => p.Value)
                 .IsRequired()

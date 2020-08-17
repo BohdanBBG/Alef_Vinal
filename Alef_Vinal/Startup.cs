@@ -1,5 +1,7 @@
 using Alef_Vinal.Contexts;
+using Alef_Vinal.Models;
 using Alef_Vinal.Repositories;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,9 +32,10 @@ namespace Alef_Vinal
 
             services.AddTransient<IDataRepository, DataRepository>();
 
-            services.AddMvc();
-
-         
+            services.AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CodeEntityValidator>()); // This will automatically find any public, non-abstract types that
+                                                                                                                // inherit from AbstractValidator and register them with the container 
+                                                                                                                //(open generics are not supported).
 
             services.AddSwaggerGen();
         }
