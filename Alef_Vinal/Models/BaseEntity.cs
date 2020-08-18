@@ -13,7 +13,6 @@ namespace Alef_Vinal.Models
             Id = Guid.NewGuid().ToString();
         }
 
-        [Required]
         public string Id { get; set; }
     }
 }

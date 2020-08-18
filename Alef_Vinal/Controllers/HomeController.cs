@@ -25,7 +25,6 @@ namespace Alef_Vinal.Controllers
 
         public IActionResult Index()
         {
-           
             return View();
         }
 
@@ -58,14 +57,14 @@ namespace Alef_Vinal.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromBody] NewCodeEntityDto codeEntity)
         {
-            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<NewCodeEntityDto,CodeEntity>()));
+            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<NewCodeEntityDto, CodeEntity>()));
 
             await _dataRepository.Add(mapper.Map<CodeEntity>(codeEntity));
 
             return Ok();
         }
 
-        [HttpPut("Update")] // TODO change to PATCH
+        [HttpPatch("Update")] 
         public async Task<IActionResult> Update([FromBody] CodeEntity codeEntity)
         {
             if (await _dataRepository.Update(codeEntity))
@@ -76,6 +75,7 @@ namespace Alef_Vinal.Controllers
             }
 
             return NotFound();
+
         }
 
     }

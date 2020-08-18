@@ -58,6 +58,7 @@ addBubleEventListener(dataListContainer, ".data-value-name-container", 'click', 
     console.log("Item list event. Actual Element: ", actualEl);
     console.log("Item list event. Desired Element: ", desiredEl);
 
+
     let codeEntityId = desiredEl.getAttribute('item-id');
 
     let selectedItemList = pageData.find(x => x.id === codeEntityId);
@@ -68,7 +69,17 @@ addBubleEventListener(dataListContainer, ".data-value-name-container", 'click', 
     editDataDormEl.elements.value.value = selectedItemList.value;
     editDataDormEl.elements.name.value = selectedItemList.name;
 
+    if (editDataDormEl.elements.id.classList.contains('input-field-empty-js')) {
+        editDataDormEl.elements.id.classList.remove('input-field-empty-js');
+    }
 
+    if (editDataDormEl.elements.value.classList.contains('input-field-empty-js')) {
+        editDataDormEl.elements.value.classList.remove('input-field-empty-js');
+    }
+
+    if (editDataDormEl.elements.name.classList.contains('input-field-empty-js')) {
+        editDataDormEl.elements.name.classList.remove('input-field-empty-js');
+    }
 });
 
 addBubleEventListener(".js-put-button-container", '.js-put-button', 'click', eventListenerState.itemListPutButton, function (e, actualEl, desiredEl) {
@@ -79,7 +90,7 @@ addBubleEventListener(".js-put-button-container", '.js-put-button', 'click', eve
 
     if (makeRequestBody(formDataSend, document.forms.EditData)) {
 
-        httpRequest("/Update", formDataSend, "PUT", function (statusCode) {
+        httpRequest("/Update", formDataSend, "PATCH", function (statusCode) {
 
             if (statusCode == 200) {
                 initDataList();
@@ -128,59 +139,23 @@ function makeRequestBody(formDataSend, source) {
         }
     }
 
+    isSomeoneEmpty = validateValue(source) ? false: true ;
+
     console.log('------', formDataSend);
 
     return !isSomeoneEmpty;
 }
 
-// function makeRequestBody(formDataSend, source, isFromEditForm = true) {
-
-//     console.log(source.elements);
-//     if (isFromEditForm) {
-//         formDataSend.id = source.elements.id.value ? source.elements.id.value :
-//             source.elements.id.classList.add('input-field-empty-js');
-//     }
-
-//     formDataSend.value = (source.elements.value.value &&
-//         (/^\d{0,3}$/.test(source.elements.value.value))) ?
-//         source.elements.value.value :
-//         source.elements.value.classList.add('input-field-empty-js');
-
-//     formDataSend.name = source.elements.name.value ? source.elements.name.value :
-//         source.elements.name.classList.add('input-field-empty-js');
-
-//     if (isFromEditForm) {
-//         source.elements.id.onfocus = function () {
-//             if (source.elements.id.classList.contains('input-field-empty-js')) {
-//                 source.elements.id.classList.remove('input-field-empty-js');
-//             }
-//         }
-//     }
-
-//     source.elements.value.onfocus = function () {
-//         if (source.elements.value.classList.contains('input-field-empty-js')) {
-//             source.elements.value.classList.remove('input-field-empty-js');
-//         }
-//     }
-
-//     source.elements.name.onfocus = function () {
-//         if (source.elements.name.classList.contains('input-field-empty-js')) {
-//             source.elements.name.classList.remove('input-field-empty-js');
-//         }
-//     }
-
-//     if ((isFromEditForm ? formDataSend.id : true) &&
-//         formDataSend.value &&
-//         formDataSend.name) {
-//         return true;
-//     }
-
-//     // if ((formDataSend.id && isFromEditForm) &&
-//     //     formDataSend.value &&
-//     //     formDataSend.name) {
-//     //     return true;
-//     // }
-// }// makes request body and checks empty field(s)
+function validateValue(source) {
+    
+    if (!/^\d{1,3}$/.test(source.elements.value.value)) {
+        source.elements.value.classList.add('input-field-empty-js');
+        
+        return false;
+    }
+    
+    return true;
+}
 
 
 function addBubleEventListener(sourceElSelector, targetElSelector, eventName, checkedHandler, eventHandler) { // for add EventListener to elements
